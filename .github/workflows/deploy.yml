@@ -33,6 +33,6 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/telecom
-          docker stop telecom-container || true
-          docker rm telecom-container || true
-          docker run -d -p 8080:80 --name telecom-container ${{ secrets.DOCKER_USERNAME }}/telecom
+          docker ps -q --filter "publish=8080" | xargs -r docker stop
+          docker ps -a -q --filter "publish=8080" | xargs -r docker rm
+          docker run -d -p 8080:80 --name telecom-container ${{ secrets.DOCKER_USERNAME }}/telecom        
